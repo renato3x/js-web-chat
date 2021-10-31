@@ -1,0 +1,54 @@
+main.container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 10% 80% 10%;
+  grid-template-areas: 
+  'nav'
+  'chat'
+  'input-area';
+}
+
+.navbar {
+  grid-area: nav;
+  background: var(--black-primary);
+  box-sizing: border-box;
+  padding: 0 .8rem 0 .8rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.input-area {
+  grid-area: input-area;
+  background: var(--black-primary);
+  box-sizing: border-box;
+  padding: .8rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.input-area #input-text {
+  flex-grow: 1;
+  background: var(--white);
+  color: black;
+  margin-right: .5rem;
+  outline: none;
+  border: none;
+  font-size: .9rem;
+}
+
+.input-area #send {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 2rem;
+  font-size: 2rem;
+  margin: 0;
+  padding: 0;
+}
