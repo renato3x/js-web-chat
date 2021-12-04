@@ -1,54 +1,63 @@
-main.container {
-  height: 100%;
+main#chat {
+  height: 100vh;
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 1.5rem 1fr 1.5rem;
   grid-template-areas: 
-  'nav'
-  'chat'
-  'input-area';
+  'header'
+  'messages'
+  'inputs';
 }
 
-.navbar {
-  grid-area: nav;
-  background: var(--black-primary);
+#header {
+  grid-area: header;
   box-sizing: border-box;
-  padding: 0 .8rem 0 .8rem;
+  padding: .25rem;
+}
+
+#header h1 {
+  font-size: .8rem;
+  margin: 0;
+  text-align: center;
+}
+
+#messages {
+  grid-area: messages;
+}
+
+#inputs {
+  grid-area: inputs;
+  background: #fff;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.navbar-logo {
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.input-area {
-  grid-area: input-area;
-  background: var(--black-primary);
+  padding: .3rem;
   box-sizing: border-box;
-  padding: .8rem;
-  display: flex;
-  justify-content: space-evenly;
 }
 
-.input-area #input-text {
+#txt-message {
   flex-grow: 1;
-  background: var(--white);
-  color: black;
-  margin-right: .5rem;
   outline: none;
+  font-size: .35rem;
+  resize: none;
   border: none;
-  font-size: .9rem;
+  color: #000;
+  overflow-x: hidden;
 }
 
-.input-area #send {
+#txt-message::placeholder {
+  color: #808080;
+}
+
+#send {
+  height: 100%;
+  width: fit-content;
+  font-size: 0;
+  padding: 0;
   background: transparent;
   border: none;
   cursor: pointer;
-  width: 2rem;
-  font-size: 2rem;
-  margin: 0;
-  padding: 0;
+  outline: none;
+}
+
+#send img {
+  width: .7rem;
+  height: .7rem;
 }

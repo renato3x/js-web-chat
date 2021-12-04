@@ -1,23 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Righteous&family=Roboto&display=swap');
 
 :root {
-  --black-primary: #ba181b;
-  --white: #ffffff; 
-}
-
-* {
-  color: var(--white);
-  font-family: 'Open Sans', sans-serif;
+  --bg-color: #1C1C1C;
+  --txt-color: #fff;
+  --msg-received-bg: #696969;
+  --msg-sended-bg: #4f4f4f;
 }
 
 html {
   font-size: 16px;
 }
 
+* {
+  font-family: 'Roboto', sans-serif;
+  color: var(--txt-color);
+}
+
+h1 {
+  font-family: 'Righteous', sans-serif !important;
+}
+
 body {
-  height: 100vh;
-  max-height: 100vh;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background: var(--bg-color);
 }
