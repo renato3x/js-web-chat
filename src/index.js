@@ -1,7 +1,14 @@
 const express = require('express')
 const app = express()
+const http = require('http').createServer(app)
 const { cyan } = require('chalk')
 const path = require('path')
+const ChatService = require('./services/ChatService')
+const { Server } = require('socket.io')
+
+//Chat Service instance
+const io = new Server(http) 
+new ChatService(io).start()
 
 //routes
 const chatRoutes = require('./routes/chat.routes')
@@ -17,6 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(chatRoutes)
 
 //server start
-app.listen(3000, () => {
+http.listen(3000, () => {
   console.log(`Server open in ${cyan('http://localhost:3000/')}`)
 })
