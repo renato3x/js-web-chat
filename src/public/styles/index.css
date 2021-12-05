@@ -1,7 +1,7 @@
 main#chat {
   height: 100vh;
   display: grid;
-  grid-template-rows: 1.5rem 1fr 1.5rem;
+  grid-template-rows: 3rem 1fr 3.5rem;
   grid-template-areas: 
   'header'
   'messages'
@@ -11,35 +11,32 @@ main#chat {
 #header {
   grid-area: header;
   box-sizing: border-box;
-  padding: .25rem;
+  padding: .3rem;
 }
 
 #header h1 {
-  font-size: .8rem;
   margin: 0;
   text-align: center;
-}
-
-#messages {
-  grid-area: messages;
 }
 
 #inputs {
   grid-area: inputs;
   background: #fff;
   display: flex;
-  padding: .3rem;
+  padding: .5rem;
   box-sizing: border-box;
 }
 
 #txt-message {
   flex-grow: 1;
   outline: none;
-  font-size: .35rem;
+  font-size: .9rem;
   resize: none;
   border: none;
   color: #000;
   overflow-x: hidden;
+  line-height: 2.5rem;
+  padding: 0;
 }
 
 #txt-message::placeholder {
@@ -58,6 +55,48 @@ main#chat {
 }
 
 #send img {
-  width: .7rem;
-  height: .7rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+#messages {
+  grid-area: messages;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 2.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  max-width: 30rem;
+  background: var(--msg-received-bg);
+  padding: .7rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.message + .message {
+  margin-top: 1.5rem;
+}
+
+.message.sended {
+  background: var(--msg-sended-bg);
+  align-self: flex-end;
+}
+
+.message .message-text {
+  margin: 0;
+  font-size: .9rem;
+  text-align: justify;
+  word-wrap: break-word;
+}
+
+.message .message-hour {
+  align-self: flex-end;
+  font-size: .8rem;
 }

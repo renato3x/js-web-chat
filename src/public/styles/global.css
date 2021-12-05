@@ -15,6 +15,7 @@ html {
 * {
   font-family: 'Roboto', sans-serif;
   color: var(--txt-color);
+  font-weight: 400;
 }
 
 h1 {
