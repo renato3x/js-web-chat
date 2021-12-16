@@ -71,7 +71,7 @@ main#chat {
 }
 
 .message {
-  max-width: 30rem;
+  width: 20rem;
   background: var(--msg-received-bg);
   padding: .7rem;
   border-radius: 8px;

@@ -21,7 +21,7 @@ document.addEventListener('keyup', event => {
     const formatedDate = `${hours}:${minutes}`
 
     const data = { body: txtMessage.value, createdAt: formatedDate }
-    socketIoConnection.emit('new-text-message', data)
+    socketIoConnection.emit('send-text-message', data)
     
     txtMessage.value = ''
     sendBtn.firstElementChild.src = '/img/microphone.svg'
@@ -30,6 +30,8 @@ document.addEventListener('keyup', event => {
     renderMessage(data,true)
   }
 })
+
+socketIoConnection.on('new-text-message', renderMessage)
 
 function renderMessage({ body, createdAt }, sended = false) {
   const message = document.createElement('div')
