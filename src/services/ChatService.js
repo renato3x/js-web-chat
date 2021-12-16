@@ -5,7 +5,7 @@ module.exports = class ChatService {
 
   start() {
     this.io.on('connection', socket => {
-      console.log(`Someone connected with id ${socket.id}`)
+      
     })
   }
 }
