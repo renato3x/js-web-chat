@@ -3,6 +3,8 @@ const socketIoConnection = io('http://localhost:3000')
 const txtMessage = document.querySelector('#txt-message')
 const sendBtn = document.querySelector('#send')
 
+socketIoConnection.on('new-text-message', renderMessage)
+
 txtMessage.addEventListener('input', () => {
   if (txtMessage.value.length > 0) {
     sendBtn.firstElementChild.src = '/img/send.svg'
@@ -13,25 +15,17 @@ txtMessage.addEventListener('input', () => {
   }
 })
 
-document.addEventListener('keyup', event => {
-  if (event.key === 'Enter' && txtMessage.value.length > 0) {
-    const date = new Date()
-    const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
-    const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
-    const formatedDate = `${hours}:${minutes}`
-
-    const data = { body: txtMessage.value, createdAt: formatedDate }
-    socketIoConnection.emit('send-text-message', data)
-    
-    txtMessage.value = ''
-    sendBtn.firstElementChild.src = '/img/microphone.svg'
-    sendBtn.dataset.sendMethod = 'audio'
-
-    renderMessage(data,true)
+sendBtn.addEventListener('click', () => {
+  if (sendBtn.dataset.sendMethod === 'text') {
+    sendTextMessage()
   }
 })
 
-socketIoConnection.on('new-text-message', renderMessage)
+document.addEventListener('keyup', event => {
+  if (event.key === 'Enter') {
+    sendTextMessage()
+  }
+})
 
 function renderMessage({ body, createdAt }, sended = false) {
   const message = document.createElement('div')
@@ -52,4 +46,22 @@ function renderMessage({ body, createdAt }, sended = false) {
   message.append(messageText, messageHour)
 
   document.querySelector('#messages').appendChild(message)
+}
+
+function sendTextMessage() {
+  if (txtMessage.value.length > 0) {
+    const date = new Date()
+    const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
+    const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
+    const formatedDate = `${hours}:${minutes}`
+  
+    const data = { body: txtMessage.value, createdAt: formatedDate }
+    socketIoConnection.emit('send-text-message', data)
+    
+    txtMessage.value = ''
+    sendBtn.firstElementChild.src = '/img/microphone.svg'
+    sendBtn.dataset.sendMethod = 'audio'
+  
+    renderMessage(data,true)
+  }
 }
