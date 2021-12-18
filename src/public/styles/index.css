@@ -100,3 +100,54 @@ main#chat {
   align-self: flex-end;
   font-size: .8rem;
 }
+
+.message-text + .message-hour {
+  margin-top: .5rem;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.audio-state {
+  font-size: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  padding-left: 0;
+}
+
+.audio-state img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.audio-progress {
+  appearance: none;
+  flex-grow: 1;
+  height: .08rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.audio-progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #000;
+}
+
+.audio-message-data {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .8rem;
+  margin-top: .5rem;
+}
