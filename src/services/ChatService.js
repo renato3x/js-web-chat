@@ -9,7 +9,9 @@ module.exports = class ChatService {
         socket.broadcast.emit('new-text-message', data)
       })
 
-      socket.on('send-audio-message', console.log)
+      socket.on('send-audio-message', data => {
+        socket.broadcast.emit('new-audio-message', data)
+      })
     })
   }
 }

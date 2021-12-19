@@ -1,10 +1,11 @@
-const socketIoConnection = io('http://localhost:3000')
+const socketIoConnection = io('https://34d8-2804-6b08-310-1c00-b624-e4f5-871f-d208.ngrok.io')
   
 const txtMessage = document.querySelector('#txt-message')
 const sendBtn = document.querySelector('#send')
 const audioInputs = document.querySelector('#audio-inputs')
 
 socketIoConnection.on('new-text-message', renderMessage)
+socketIoConnection.on('new-audio-message', renderAudioMessage)
 
 txtMessage.addEventListener('input', () => {
   if (txtMessage.value.length > 0) {
@@ -29,6 +30,8 @@ document.addEventListener('keyup', event => {
     sendTextMessage()
   }
 })
+
+/* send text message functions */
 
 function sendTextMessage() {
   if (txtMessage.value.length > 0) {
@@ -60,9 +63,13 @@ function renderMessage({ body, createdAt }, sended = false) {
   messageHour.innerText = createdAt
 
   message.append(messageText, messageHour)
-
-  document.querySelector('#messages').appendChild(message)
+  
+  const messages = document.querySelector('#messages')
+  messages.appendChild(message)
+  messages.scrollBy(0, messages.scrollHeight)
 }
+
+/* send audio functions */
 
 async function recordAudioAndSend() {
   txtMessage.classList.add('hide')
@@ -84,6 +91,7 @@ async function recordAudioAndSend() {
 
         const dataToSend = { blob, createdAt: createCreatedAt() }
         socketIoConnection.emit('send-audio-message', dataToSend)
+        renderAudioMessage(dataToSend, true)
       }
     })
 
@@ -112,6 +120,37 @@ function hideAudioInputs() {
   setTimeout(() => {
     txtMessage.classList.remove('hide')
   }, 200)
+}
+
+function renderAudioMessage({ blob, createdAt }, sended = false) { // this function is only a prototype
+  const newBlob = new Blob([blob], { type: 'audio/ogg; codecs=opus' })
+  
+  const message = document.createElement('div')
+  message.classList.add('message')
+
+  if (sended) {
+    message.classList.add('sended')
+  }
+
+  const audio = document.createElement('audio')
+  audio.controls = true
+
+  const source = document.createElement('source')
+  source.src = URL.createObjectURL(newBlob)
+  source.type = 'audio/ogg'
+
+  audio.appendChild(source)
+
+  const messageHour = document.createElement('span')
+  messageHour.classList.add('message-hour')
+  messageHour.innerText = createdAt
+
+  message.appendChild(audio)
+  message.appendChild(messageHour)
+
+  const messages = document.querySelector('#messages')
+  messages.appendChild(message)
+  messages.scrollBy(0, messages.scrollHeight)
 }
 
 /* util functions */
