@@ -20,7 +20,7 @@ sendBtn.addEventListener('click', () => {
   if (sendBtn.dataset.sendMethod === 'text') {
     sendTextMessage()
   } else if (sendBtn.dataset.sendMethod === 'audio') {
-    recordAudioAndSend()
+    recordAudio()
   }
 })
 
@@ -55,7 +55,7 @@ function renderMessage({ body, createdAt }, sended = false) {
   if (sended) {
     message.classList.add('sended')
   }
-
+  
   const messageText = document.createElement('p')
   messageText.classList.add('message-text')
   messageText.innerText = body
@@ -69,7 +69,33 @@ function renderMessage({ body, createdAt }, sended = false) {
   document.querySelector('#messages').appendChild(message)
 }
 
-async function recordAudioAndSend() {
+async function recordAudio() {
   txtMessage.classList.add('hide')
   audioInputs.classList.add('show-audio-inputs')
+
+  const audioSend = document.querySelector('#audio-send')
+  const audioCancel = document.querySelector('#audio-cancel')
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    const mediaRecorder = new MediaRecorder(stream)
+
+    mediaRecorder.start()
+
+    audioCancel.addEventListener('click', () => {
+      if (mediaRecorder.state === 'recording') {
+        mediaRecorder.stop()
+        hideAudioInputs()
+      }
+    })
+  } catch (error) {
+    hideAudioInputs()
+  }
+}
+
+function hideAudioInputs() {
+  audioInputs.classList.remove('show-audio-inputs')
+  setTimeout(() => {
+    txtMessage.classList.remove('hide')
+  }, 200)
 }
