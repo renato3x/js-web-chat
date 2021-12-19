@@ -8,6 +8,8 @@ main#chat {
   'inputs';
 }
 
+/* heading styles */
+
 #header {
   grid-area: header;
   box-sizing: border-box;
@@ -19,12 +21,15 @@ main#chat {
   text-align: center;
 }
 
+/* inputs styles */
+
 #inputs {
   grid-area: inputs;
   background: #fff;
   display: flex;
   padding: .5rem;
   box-sizing: border-box;
+  position: relative;
 }
 
 #txt-message {
@@ -37,6 +42,12 @@ main#chat {
   overflow-x: hidden;
   line-height: 2.5rem;
   padding: 0;
+  opacity: 1;
+  transition: opacity .2s;
+}
+
+#txt-message.hide {
+  opacity: 0;
 }
 
 #txt-message::placeholder {
@@ -105,49 +116,52 @@ main#chat {
   margin-top: .5rem;
 }
 
-.audio-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+/* audio inputs styles */
 
-.audio-state {
-  font-size: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+#audio-inputs {
   display: flex;
   justify-content: center;
   align-items: center;
-  outline: none;
-  padding-left: 0;
+  position: absolute;
+  left: -50rem;
+  transition: left .2s;
+  transition-delay: .2s;
+  margin-left: .5rem;
+  z-index: 10000;
 }
 
-.audio-state img {
+#audio-inputs.show-audio-inputs {
+  left: 0;
+}
+
+#audio-inputs span {
+  color: #808080;
+  margin-right: .5rem;
+}
+
+#audio-inputs button {
+  width: 1.5rem;
+  height: 1.5rem;
+  height: 100%;
+  width: fit-content;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+#audio-inputs button img {
   width: 1.5rem;
   height: 1.5rem;
 }
 
-.audio-progress {
-  appearance: none;
-  flex-grow: 1;
-  height: .08rem;
-  outline: none;
-  cursor: pointer;
-}
-
-.audio-progress::-webkit-slider-thumb {
-  appearance: none;
-  width: 1rem;
-  height: 1rem;
+#audio-send img {
   border-radius: 50%;
-  background: #000;
+  border: 1px solid #60d394;
+  padding: .2rem;
 }
 
-.audio-message-data {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: .8rem;
-  margin-top: .5rem;
+#audio-cancel img  {
+  border-radius: 50%;
+  border: 1px solid #ee6055;
+  padding: .2rem;
 }

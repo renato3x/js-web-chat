@@ -14,21 +14,17 @@
         <h1>Anonymous</h1>
       </div>
       <div id="messages">
-        <!-- <div class="message audio sended">
-          <audio src="/audio/audio.ogg" type="audio/ogg"></audio>
-          <div class="audio-controls">
-            <button class="audio-state">
-              <img src="/img/play.svg" alt="Play Button">
-            </button>
-            <input type="range" class="audio-progress" min="0" max="1" step="0.01" value="0">
-          </div>
-          <div class="audio-message-data">
-            <span class="audio-time">0:00</span>
-            <span class="message-hour">10:46</span>
-          </div>
-        </div> -->
       </div>
       <div id="inputs">
+        <div id="audio-inputs">
+          <span>Gravando...</span>
+          <button id="audio-send">
+            <img src="/img/ok.svg" alt="Send audio">
+          </button>
+          <button id="audio-cancel">
+            <img src="/img/cancel.svg" alt="Cancel">
+          </button>
+        </div>
         <textarea id="txt-message" placeholder="Digite alguma coisa..."></textarea>
         <button id="send" data-send-method="audio">
           <img src="/img/microphone.svg" alt="Send message">

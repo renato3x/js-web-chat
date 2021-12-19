@@ -2,6 +2,7 @@ const socketIoConnection = io('http://localhost:3000')
   
 const txtMessage = document.querySelector('#txt-message')
 const sendBtn = document.querySelector('#send')
+const audioInputs = document.querySelector('#audio-inputs')
 
 socketIoConnection.on('new-text-message', renderMessage)
 
@@ -18,6 +19,8 @@ txtMessage.addEventListener('input', () => {
 sendBtn.addEventListener('click', () => {
   if (sendBtn.dataset.sendMethod === 'text') {
     sendTextMessage()
+  } else if (sendBtn.dataset.sendMethod === 'audio') {
+    recordAudioAndSend()
   }
 })
 
@@ -26,6 +29,24 @@ document.addEventListener('keyup', event => {
     sendTextMessage()
   }
 })
+
+function sendTextMessage() {
+  if (txtMessage.value.length > 0) {
+    const date = new Date()
+    const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
+    const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
+    const formatedDate = `${hours}:${minutes}`
+  
+    const data = { body: txtMessage.value, createdAt: formatedDate }
+    socketIoConnection.emit('send-text-message', data)
+    
+    txtMessage.value = ''
+    sendBtn.firstElementChild.src = '/img/microphone.svg'
+    sendBtn.dataset.sendMethod = 'audio'
+  
+    renderMessage(data,true)
+  }
+}
 
 function renderMessage({ body, createdAt }, sended = false) {
   const message = document.createElement('div')
@@ -48,20 +69,7 @@ function renderMessage({ body, createdAt }, sended = false) {
   document.querySelector('#messages').appendChild(message)
 }
 
-function sendTextMessage() {
-  if (txtMessage.value.length > 0) {
-    const date = new Date()
-    const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
-    const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
-    const formatedDate = `${hours}:${minutes}`
-  
-    const data = { body: txtMessage.value, createdAt: formatedDate }
-    socketIoConnection.emit('send-text-message', data)
-    
-    txtMessage.value = ''
-    sendBtn.firstElementChild.src = '/img/microphone.svg'
-    sendBtn.dataset.sendMethod = 'audio'
-  
-    renderMessage(data,true)
-  }
+async function recordAudioAndSend() {
+  txtMessage.classList.add('hide')
+  audioInputs.classList.add('show-audio-inputs')
 }
