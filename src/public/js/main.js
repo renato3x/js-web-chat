@@ -16,11 +16,11 @@ txtMessage.addEventListener('input', () => {
   }
 })
 
-sendBtn.addEventListener('click', () => {
+sendBtn.addEventListener('click', async () => {
   if (sendBtn.dataset.sendMethod === 'text') {
     sendTextMessage()
   } else if (sendBtn.dataset.sendMethod === 'audio') {
-    recordAudio()
+    await recordAudioAndSend()
   }
 })
 
@@ -32,12 +32,7 @@ document.addEventListener('keyup', event => {
 
 function sendTextMessage() {
   if (txtMessage.value.length > 0) {
-    const date = new Date()
-    const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
-    const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
-    const formatedDate = `${hours}:${minutes}`
-  
-    const data = { body: txtMessage.value, createdAt: formatedDate }
+    const data = { body: txtMessage.value, createdAt: createCreatedAt() }
     socketIoConnection.emit('send-text-message', data)
     
     txtMessage.value = ''
@@ -69,12 +64,13 @@ function renderMessage({ body, createdAt }, sended = false) {
   document.querySelector('#messages').appendChild(message)
 }
 
-async function recordAudio() {
+async function recordAudioAndSend() {
   txtMessage.classList.add('hide')
   audioInputs.classList.add('show-audio-inputs')
 
   const audioSend = document.querySelector('#audio-send')
   const audioCancel = document.querySelector('#audio-cancel')
+  let canSend = undefined
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -82,8 +78,26 @@ async function recordAudio() {
 
     mediaRecorder.start()
 
+    mediaRecorder.addEventListener('dataavailable', ({ data }) => {
+      if (canSend) {
+        const blob = new Blob([data], { type: 'audio/ogg; codecs=opus' })
+
+        const dataToSend = { blob, createdAt: createCreatedAt() }
+        socketIoConnection.emit('send-audio-message', dataToSend)
+      }
+    })
+
+    audioSend.addEventListener('click', () => {
+      if (mediaRecorder.state === 'recording') {
+        canSend = true
+        mediaRecorder.stop()
+        hideAudioInputs()
+      }
+    })
+
     audioCancel.addEventListener('click', () => {
       if (mediaRecorder.state === 'recording') {
+        canSend = false
         mediaRecorder.stop()
         hideAudioInputs()
       }
@@ -98,4 +112,13 @@ function hideAudioInputs() {
   setTimeout(() => {
     txtMessage.classList.remove('hide')
   }, 200)
+}
+
+/* util functions */
+
+function createCreatedAt() {
+  const date = new Date()
+  const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
+  const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
+  return `${hours}:${minutes}`
 }
