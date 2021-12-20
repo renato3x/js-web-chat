@@ -1,4 +1,4 @@
-const socketIoConnection = io('https://34d8-2804-6b08-310-1c00-b624-e4f5-871f-d208.ngrok.io')
+const socketIoConnection = io('http://localhost:3000')
   
 const txtMessage = document.querySelector('#txt-message')
 const sendBtn = document.querySelector('#send')
