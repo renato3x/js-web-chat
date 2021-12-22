@@ -14,11 +14,17 @@ main#chat {
   grid-area: header;
   box-sizing: border-box;
   padding: .3rem;
+  position: relative;
 }
 
 #header h1 {
   margin: 0;
   text-align: center;
+}
+
+#header #chat-status {
+  position: absolute;
+  transform: translateY(50%);
 }
 
 /* inputs styles */

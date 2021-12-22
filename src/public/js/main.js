@@ -7,13 +7,38 @@ const audioInputs = document.querySelector('#audio-inputs')
 socketIoConnection.on('new-text-message', renderMessage)
 socketIoConnection.on('new-audio-message', renderAudioMessage)
 
+socketIoConnection.on('someone-is-typing', () => {
+  const chatStatusAlreadyExists = document.querySelector('#chat-status')
+
+  if (chatStatusAlreadyExists) {
+    chatStatusAlreadyExists.innerText = 'Alguém está digitando...'
+  } else {
+    const chatStatus = document.querySelector('span')
+    chatStatus.setAttribute('id', 'chat-status')
+    chatStatus.innerText = 'Alguém está digitando...'
+    
+    const header = document.querySelector('#header')
+
+    const h1 = header.firstElementChild
+    header.replaceChild(chatStatus, h1)
+    header.appendChild(h1)
+  }
+})
+
+socketIoConnection.on('someone-stopped-typing', () => {
+  const chatStatus = document.querySelector('#chat-status')
+  chatStatus.innerText = ''
+})
+
 txtMessage.addEventListener('input', () => {
   if (txtMessage.value.length > 0) {
     sendBtn.firstElementChild.src = '/img/send.svg'
     sendBtn.dataset.sendMethod = 'text'
+    socketIoConnection.emit('typing')
   } else {
     sendBtn.firstElementChild.src = '/img/microphone.svg'
     sendBtn.dataset.sendMethod = 'audio'
+    socketIoConnection.emit('typing-stopped')
   }
 })
 
