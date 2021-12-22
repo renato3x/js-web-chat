@@ -24,6 +24,14 @@ module.exports = class ChatService {
         socket.broadcast.emit('someone-stopped-typing')
       })
 
+      socket.on('recording-audio', () => {
+        socket.broadcast.emit('someone-is-recording-audio')
+      })
+
+      socket.on('stopped-audio-recording', () => {
+        socket.broadcast.emit('someone-stopped-recording-audio')
+      })
+
       socket.on('disconnect', () => {
         console.log('People online:', --this.quantity)
       })

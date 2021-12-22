@@ -1,8 +1,10 @@
-const socketIoConnection = io('http://localhost:3000')
+const socketIoConnection = io('http://localhost:3000/')
   
 const txtMessage = document.querySelector('#txt-message')
 const sendBtn = document.querySelector('#send')
 const audioInputs = document.querySelector('#audio-inputs')
+
+/* socket io server events */
 
 socketIoConnection.on('new-text-message', renderMessage)
 socketIoConnection.on('new-audio-message', renderAudioMessage)
@@ -29,6 +31,31 @@ socketIoConnection.on('someone-stopped-typing', () => {
   const chatStatus = document.querySelector('#chat-status')
   chatStatus.innerText = ''
 })
+
+socketIoConnection.on('someone-is-recording-audio', () => {
+  const chatStatusAlreadyExists = document.querySelector('#chat-status')
+
+  if (chatStatusAlreadyExists) {
+    chatStatusAlreadyExists.innerText = 'Alguém está gravando áudio...'
+  } else {
+    const chatStatus = document.querySelector('span')
+    chatStatus.setAttribute('id', 'chat-status')
+    chatStatus.innerText = 'Alguém está gravando áudio...'
+    
+    const header = document.querySelector('#header')
+
+    const h1 = header.firstElementChild
+    header.replaceChild(chatStatus, h1)
+    header.appendChild(h1)
+  }
+})
+
+socketIoConnection.on('someone-stopped-recording-audio', () => {
+  const chatStatus = document.querySelector('#chat-status')
+  chatStatus.innerText = ''
+})
+
+/* html events */
 
 txtMessage.addEventListener('input', () => {
   if (txtMessage.value.length > 0) {
@@ -62,7 +89,8 @@ function sendTextMessage() {
   if (txtMessage.value.length > 0) {
     const data = { body: txtMessage.value, createdAt: createCreatedAt() }
     socketIoConnection.emit('send-text-message', data)
-    
+    socketIoConnection.emit('typing-stopped')
+
     txtMessage.value = ''
     sendBtn.firstElementChild.src = '/img/microphone.svg'
     sendBtn.dataset.sendMethod = 'audio'
@@ -74,11 +102,11 @@ function sendTextMessage() {
 function renderMessage({ body, createdAt }, sended = false) {
   const message = document.createElement('div')
   message.classList.add('message')
-
+  
   if (sended) {
     message.classList.add('sended')
   }
-  
+
   const messageText = document.createElement('p')
   messageText.classList.add('message-text')
   messageText.innerText = body
@@ -90,8 +118,14 @@ function renderMessage({ body, createdAt }, sended = false) {
   message.append(messageText, messageHour)
   
   const messages = document.querySelector('#messages')
+
   messages.appendChild(message)
+
   messages.scrollBy(0, messages.scrollHeight)
+
+  if (!sended) {
+    notify()
+  }
 }
 
 /* send audio functions */
@@ -109,6 +143,7 @@ async function recordAudioAndSend() {
     const mediaRecorder = new MediaRecorder(stream)
 
     mediaRecorder.start()
+    socketIoConnection.emit('recording-audio')
 
     mediaRecorder.addEventListener('dataavailable', ({ data }) => {
       if (canSend) {
@@ -125,6 +160,7 @@ async function recordAudioAndSend() {
         canSend = true
         mediaRecorder.stop()
         hideAudioInputs()
+        socketIoConnection('stopped-audio-recording')
       }
     })
 
@@ -133,6 +169,7 @@ async function recordAudioAndSend() {
         canSend = false
         mediaRecorder.stop()
         hideAudioInputs()
+        socketIoConnection('stopped-audio-recording')
       }
     })
   } catch (error) {
@@ -174,8 +211,14 @@ function renderAudioMessage({ blob, createdAt }, sended = false) { // this funct
   message.appendChild(messageHour)
 
   const messages = document.querySelector('#messages')
+
   messages.appendChild(message)
+
   messages.scrollBy(0, messages.scrollHeight)
+
+  if (!sended) {
+    notify()
+  }
 }
 
 /* util functions */
@@ -185,4 +228,8 @@ function createCreatedAt() {
   const hours = `${date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`}`
   const minutes = `${date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`}`
   return `${hours}:${minutes}`
+}
+
+function notify() {
+  new Audio('/audio/notification_sound.mp3').play()
 }
