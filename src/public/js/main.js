@@ -160,7 +160,7 @@ async function recordAudioAndSend() {
         canSend = true
         mediaRecorder.stop()
         hideAudioInputs()
-        socketIoConnection('stopped-audio-recording')
+        socketIoConnection.emit('stopped-audio-recording')
       }
     })
 
@@ -169,7 +169,7 @@ async function recordAudioAndSend() {
         canSend = false
         mediaRecorder.stop()
         hideAudioInputs()
-        socketIoConnection('stopped-audio-recording')
+        socketIoConnection.emit('stopped-audio-recording')
       }
     })
   } catch (error) {
@@ -184,7 +184,7 @@ function hideAudioInputs() {
   }, 200)
 }
 
-function renderAudioMessage({ blob, createdAt }, sended = false) { // this function is only a prototype
+function renderAudioMessage({ blob, createdAt }, sended = false) {
   const newBlob = new Blob([blob], { type: 'audio/ogg; codecs=opus' })
   
   const message = document.createElement('div')
@@ -194,27 +194,63 @@ function renderAudioMessage({ blob, createdAt }, sended = false) { // this funct
     message.classList.add('sended')
   }
 
+  // audio element creation
   const audio = document.createElement('audio')
-  audio.controls = true
+  audio.src = URL.createObjectURL(newBlob)
+  audio.type = 'audio/ogg'
 
-  const source = document.createElement('source')
-  source.src = URL.createObjectURL(newBlob)
-  source.type = 'audio/ogg'
+  //audio controls creation
+  const audioControls = document.createElement('div')
+  audioControls.classList.add('audio-controls')
 
-  audio.appendChild(source)
+  //audio state creationg
+  const audioState = document.createElement('button')
+  audioState.classList.add('audio-state')
 
-  const messageHour = document.createElement('span')
-  messageHour.classList.add('message-hour')
-  messageHour.innerText = createdAt
+  //img creation
+  const img = document.createElement('img')
+  img.src = '/img/play.svg'
 
-  message.appendChild(audio)
-  message.appendChild(messageHour)
+  //appending img in audioState
+  audioState.appendChild(img)
+
+  //audio progress creation
+  const audioProgress = document.createElement('input')
+  audioProgress.type = 'range'
+  audioProgress.min = '0'
+  audioProgress.max = '1'
+  audioProgress.value = '0'
+  audioProgress.step = '0.01'
+  audioProgress.classList.add('audio-progress')
+
+  //appending elements in audio controls
+  audioControls.append(audioState, audioProgress)
+
+  //audio infos creation
+  const messageInfos = document.createElement('div')
+  messageInfos.classList.add('message-infos')
+
+  //audio time creation
+  const audioTime = document.createElement('span')
+  audioTime.classList.add('audio-time')
+  audioTime.innerText = '00:00'
+
+  //message hours creation
+  const messageHours = document.createElement('span')
+  messageHours.classList.add('message-hours')
+  messageHours.innerText = createdAt
+
+  messageInfos.append(audioTime, messageHours)
+
+  message.append(audio, audioControls, messageInfos)
 
   const messages = document.querySelector('#messages')
 
   messages.appendChild(message)
 
   messages.scrollBy(0, messages.scrollHeight)
+
+  setAudioPlayer(message)
 
   if (!sended) {
     notify()

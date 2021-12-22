@@ -118,7 +118,52 @@ main#chat {
   font-size: .8rem;
 }
 
-.message-text + .message-hour {
+.message .audio-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-infos {
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.message .audio-controls .audio-state {
+  width: fit-content;
+  height: fit-content;
+  font-size: 0;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.message .audio-controls .audio-state img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.message .audio-controls .audio-progress {
+  appearance: none;
+  height: .07rem;
+  outline: none;
+  cursor: pointer;
+  flex-grow: 1;
+  background: #000;
+}
+
+.message .audio-controls .audio-progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.message-text + .message-hour, .audio-controls + .message-infos {
   margin-top: .5rem;
 }
 

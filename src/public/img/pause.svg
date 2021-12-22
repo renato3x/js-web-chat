@@ -9,7 +9,7 @@
                 <g id="Outlined-/-AV-/-pause" transform="translate(204.000000, 98.000000)">
                     <g>
                         <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
-                        <path d="M6,19 L10,19 L10,5 L6,5 L6,19 Z M14,5 L14,19 L18,19 L18,5 L14,5 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+                        <path d="M6,19 L10,19 L10,5 L6,5 L6,19 Z M14,5 L14,19 L18,19 L18,5 L14,5 Z" id="🔹-Icon-Color" fill="#000000"></path>
                     </g>
                 </g>
             </g>
