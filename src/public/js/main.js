@@ -267,5 +267,7 @@ function createCreatedAt() {
 }
 
 function notify() {
-  new Audio('/audio/notification_sound.mp3').play()
+  const audio = new Audio('/audio/notification_sound.mp3')
+  audio.volume = 0.2
+  audio.play()
 }
